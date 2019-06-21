@@ -65,7 +65,7 @@ async function login(req, res) {
       .json({ message: "login successful!.", token });
   } else {
     res
-      .tatus(401)
+      .status(401)
       .json({ message: "Invalid credentials." });
   }
 }
