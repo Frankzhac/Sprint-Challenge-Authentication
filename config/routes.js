@@ -6,11 +6,28 @@ const bcrypt = require("bcryptjs");
 const db = require("../database/dbConfig.js");
 const jwt = require("jsonwebtoken");
 
+
 module.exports = server => {
   server.post('/api/register', register);
   server.post('/api/login', login);
   server.get('/api/jokes', authenticate, getJokes);
 };
+
+function generateToken(user) {
+  const payload = {
+    username: user.id,
+    name: user.username
+  };
+
+  const secret = process.env.JWT_SECRET;
+
+  const options = {
+    expiresIn: "1d"
+  };
+
+  return jwt.sign(payload, secret, options);
+}
+
 
 function register(req, res) {
   if (!req.body.username || !req.body.password) {
