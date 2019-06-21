@@ -1,7 +1,10 @@
+require("dotenv").config();
 const axios = require('axios');
 
 const { authenticate } = require('../auth/authenticate');
 const bcrypt = require("bcryptjs");
+const db = require("../database/dbConfig.js");
+const jwt = require("jsonwebtoken");
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -12,7 +15,7 @@ module.exports = server => {
 function register(req, res) {
   if (!req.body.username || !req.body.password) {
     res.status(400).json({
-      message: "Please include a username and password and try again."
+      message: "Please include a username and password."
     });
   }
   const newUser = req.body;
@@ -33,8 +36,21 @@ function register(req, res) {
     });
 }
 
-function login(req, res) {
-  // implement user login
+async function login(req, res) {
+  const creds = req.body;
+  const user = await db("users")
+    .where({ username: creds.username })
+    .first();
+  if (user && bcrypt.compareSync(creds.password, user.password)) {
+    const token = generateToken(user);
+    res
+      .status(200)
+      .json({ message: "login successful!.", token });
+  } else {
+    res
+      .tatus(401)
+      .json({ message: "Invalid credentials." });
+  }
 }
 
 function getJokes(req, res) {
