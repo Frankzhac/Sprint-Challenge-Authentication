@@ -18,12 +18,14 @@ class Login extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
+    const endpoint = 'http://localhost:3300/api/login';
 
-    axios.post('/auth/login', this.state)
+
+    axios.post(endpoint, this.state)
     .then(res => {
       console.log(res.data);
       localStorage.setItem('token', res.data.token);
-      this.props.history.push('/jokes');
+      this.props.history.push('/users');
     })
     .catch(err => {
       console.log(err)

@@ -46,13 +46,13 @@ class Register extends React.Component {
       };
     }
 
-    handleInputChange = event => {
-        const { name, value } = event.target;
+    handleInputChange = e => {
+        const { name, value } = e.target;
 
         this.setState({ [name]: value });
       };
 
-      handleSubmit = event => {
+      handleSubmit = e => {
         event.preventDefault();
 
         const endpoint = 'http://localhost:3300/api/register';
